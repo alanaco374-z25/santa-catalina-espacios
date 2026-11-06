@@ -144,7 +144,7 @@ def eliminar_registro(registro_id):
 
 
 st.set_page_config(
-    page_title="Gestión de Espacios y Aulas - Santa Catalina",
+    page_title="Gestión de Espacios - Santa Catalina",
     page_icon="🏛️",
     layout="centered",
 )
@@ -154,53 +154,68 @@ st.markdown(
     <style>
     .stApp, * { font-family: 'Segoe UI', sans-serif !important; }
     .stApp { background-color: #F8F9FA; color: #212529 !important; }
-    .stTextInput input, .stSelectbox select, .stDateInput input {
-        background-color: #FFFFFF !important; color: #1E293B !important;
-        border: 1px solid #CBD5E1 !important; border-radius: 6px !important;
+    
+    /* Adaptación de fuentes e inputs para evitar zoom molesto en móviles */
+    input, select, textarea {
+        font-size: 16px !important;
+        background-color: #FFFFFF !important;
+        color: #1E293B !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 6px !important;
     }
+    
     .stTextInput label, .stSelectbox label, .stDateInput label {
         color: #0F172A !important; font-weight: 600 !important;
     }
+
     div[data-testid="stVerticalBlock"] > div[style*="border"] {
         background-color: #FFFFFF; border: 1px solid #CBD5E1 !important;
-        border-radius: 10px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        border-radius: 10px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     }
+
     button[kind="primary"] {
         background-color: #00B4D8 !important; color: white !important; border-radius: 6px !important; font-weight: 600 !important;
     }
+
     button[kind="secondary"] {
         background-color: #FFFFFF !important; color: #1E293B !important; border: 1px solid #CBD5E1 !important; border-radius: 6px !important; font-weight: 600 !important;
     }
+
     button[aria-label="Show password"], button[aria-label="Hide password"] {
         display: none !important;
     }
+
+    /* Imágenes adaptables */
     img {
+        max-width: 100%;
+        height: auto;
         image-rendering: -webkit-optimize-contrast;
-        image-rendering: crisp-edges;
     }
-    /* Ocultar cualquier texto huérfano de iconos del sistema */
-    [data-testid="stSidebarNav"] span {
-        font-family: 'Segoe UI', sans-serif !important;
+
+    /* CSS Responsive para celulares */
+    @media (max-width: 768px) {
+        .stApp { padding: 5px !important; }
+        div[data-testid="stVerticalBlock"] > div[style*="border"] { padding: 10px !important; }
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Encabezado principal con logos
+# Encabezado responsive
 col_img1, col_texto, col_img2 = st.columns([1, 2.7, 1])
 
 with col_img1:
     if os.path.exists("IMG.jpg"):
-        st.image("IMG.jpg", width=115)
+        st.image("IMG.jpg", use_container_width=True)
 
 with col_texto:
     st.markdown(
         """
-        <div style='padding-top: 5px; text-align: center;'>
-            <h3 style='color: #343A40; margin-bottom: 0px; font-weight: 700; font-size: 1.15rem;'>INSTITUTO SUPERIOR</h3>
-            <h1 style='color: #00B4D8; margin-top: 0px; font-weight: 800; font-size: 1.85rem;'>SANTA CATALINA</h1>
-            <p style='color: #6C757D; letter-spacing: 1.2px; font-size: 0.7rem; margin-top: 2px; font-weight: 600;'>SISTEMA DE GESTIÓN DE ESPACIOS Y AULAS</p>
+        <div style='text-align: center;'>
+            <h3 style='color: #343A40; margin-bottom: 0px; font-weight: 700; font-size: 1rem;'>INSTITUTO SUPERIOR</h3>
+            <h1 style='color: #00B4D8; margin-top: 0px; font-weight: 800; font-size: 1.5rem;'>SANTA CATALINA</h1>
+            <p style='color: #6C757D; letter-spacing: 1px; font-size: 0.65rem; margin-top: 2px; font-weight: 600;'>SISTEMA DE GESTIÓN DE ESPACIOS Y AULAS</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -208,26 +223,26 @@ with col_texto:
 
 with col_img2:
     if os.path.exists("logo.png"):
-        st.image("logo.png", width=130)
+        st.image("logo.png", use_container_width=True)
     elif os.path.exists("logo.jpg"):
-        st.image("logo.jpg", width=130)
+        st.image("logo.jpg", use_container_width=True)
 
-st.markdown("<hr style='border: 0; border-top: 2px solid #CBD5E1; margin-top: 15px; margin-bottom: 20px;'>", unsafe_allow_html=True)
+st.markdown("<hr style='border: 0; border-top: 2px solid #CBD5E1; margin-top: 10px; margin-bottom: 15px;'>", unsafe_allow_html=True)
 
-# --- CONTROL DE ACCESO / PANTALLA DE LOGIN INSTITUCIONAL ---
+# --- LOGIN INSTITUCIONAL ---
 if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
 
 if not st.session_state.autenticado:
     st.markdown("<br>", unsafe_allow_html=True)
-    col_l1, col_l2, col_l3 = st.columns([1, 2.2, 1])
+    col_l1, col_l2, col_l3 = st.columns([0.1, 0.8, 0.1])
     with col_l2:
         with st.container(border=True):
             st.markdown(
                 """
                 <div style='text-align: center; margin-bottom: 15px;'>
-                    <h4 style='color: #03045E; font-size: 1.2rem; font-weight: 700; margin-bottom: 5px;'>🔒 Acceso Restringido</h4>
-                    <p style='color: #64748B; font-size: 0.85rem;'>Ingrese la clave institucional para operar el sistema de reservas.</p>
+                    <h4 style='color: #03045E; font-size: 1.1rem; font-weight: 700; margin-bottom: 5px;'>🔒 Acceso Restringido</h4>
+                    <p style='color: #64748B; font-size: 0.8rem;'>Ingrese la clave institucional para operar.</p>
                 </div>
                 """,
                 unsafe_allow_html=True,
@@ -242,7 +257,7 @@ if not st.session_state.autenticado:
                     st.error("❌ Clave institucional incorrecta.")
     st.stop()
 
-# --- BOTÓN DE CERRAR SESIÓN (Sidebar) ---
+# --- BARRA LATERAL (Cerrar Sesión) ---
 with st.sidebar:
     st.markdown("### Sesión Activa")
     if st.button("🔒 Cerrar Sesión", use_container_width=True):
@@ -253,40 +268,33 @@ with st.sidebar:
 try:
     registros_actuales = cargar_datos()
 except Exception as error:
-    st.error("No se pudo conectar con la base de datos en Supabase.")
+    st.error("No se pudo conectar con la base de datos.")
     st.exception(error)
     st.stop()
 
-if "pestana_espacios" not in st.session_state:
-    st.session_state.pestana_espacios = "Nueva Reserva"
-
-col_b1, col_b2, col_b3 = st.columns(3)
-with col_b1:
-    if st.button("📝 Nueva Reserva", use_container_width=True, type="primary" if st.session_state.pestana_espacios == "Nueva Reserva" else "secondary", key="e1"):
-        st.session_state.pestana_espacios = "Nueva Reserva"
-        st.rerun()
-with col_b2:
-    if st.button("📋 Planilla de Disponibilidad", use_container_width=True, type="primary" if st.session_state.pestana_espacios == "Planilla de Disponibilidad" else "secondary", key="e2"):
-        st.session_state.pestana_espacios = "Planilla de Disponibilidad"
-        st.rerun()
-with col_b3:
-    if st.button("❌ Cancelar Reserva", use_container_width=True, type="primary" if st.session_state.pestana_espacios == "Cancelar Reserva" else "secondary", key="e3"):
-        st.session_state.pestana_espacios = "Cancelar Reserva"
-        st.rerun()
+# --- NAVEGACIÓN TIPO 'SEGMENT CONTROL' (Adaptada para PC y Móviles) ---
+opciones_menu = ["📝 Nueva Reserva", "📋 Disponibilidad", "❌ Cancelar Reserva"]
+opcion_seleccionada = st.segmented_control(
+    "",
+    opciones_menu,
+    default="📝 Nueva Reserva",
+    selection_mode="single",
+)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-if st.session_state.pestana_espacios == "Nueva Reserva":
-    st.markdown("<h4 style='color: #03045E; font-size: 1.15rem; margin-bottom: 10px;'>Solicitud de Espacios y Aulas Especiales</h4>", unsafe_allow_html=True)
+# 1. NUEVA RESERVA
+if opcion_seleccionada == "📝 Nueva Reserva":
+    st.markdown("<h4 style='color: #03045E; font-size: 1.1rem; margin-bottom: 10px;'>Solicitud de Espacios</h4>", unsafe_allow_html=True)
     with st.container(border=True):
         nombre_profesor = st.text_input("Nombre y Apellido del Docente:")
         email_profesor = st.text_input("Correo Electrónico de Confirmación:")
-        col1, col2 = st.columns(2)
-        with col1:
-            fecha_sel = st.date_input("Fecha:", min_value=datetime.today().date())
-            fecha_str = fecha_sel.strftime("%Y-%m-%d")
-        with col2:
-            item_sel = st.selectbox("Seleccionar Espacio:", ESPACIOS_LISTA)
+        
+        # En celulares se apilan solos o se leen muy bien
+        fecha_sel = st.date_input("Fecha:", min_value=datetime.today().date())
+        fecha_str = fecha_sel.strftime("%Y-%m-%d")
+        
+        item_sel = st.selectbox("Seleccionar Espacio:", ESPACIOS_LISTA)
         turno_sel = st.selectbox("Bloque Horario Escolar:", TURNOS)
         es_fin_semana = fecha_sel.weekday() in [5, 6]
 
@@ -315,30 +323,32 @@ if st.session_state.pestana_espacios == "Nueva Reserva":
                 st.toast("🎉 ¡Reserva confirmada con éxito!", icon="✅")
                 st.success("🎉 ¡Reserva registrada y correo enviado con éxito!")
 
-elif st.session_state.pestana_espacios == "Planilla de Disponibilidad":
-    st.markdown("<h4 style='color: #03045E; font-size: 1.15rem; margin-bottom: 10px;'>Ocupación actual de Espacios y Aulas</h4>", unsafe_allow_html=True)
+# 2. DISPONIBILIDAD
+elif opcion_seleccionada == "📋 Disponibilidad":
+    st.markdown("<h4 style='color: #03045E; font-size: 1.1rem; margin-bottom: 10px;'>Ocupación Actual</h4>", unsafe_allow_html=True)
     if not registros_actuales:
-        st.info("No hay reservas registradas en este módulo.")
+        st.info("No hay reservas registradas.")
     else:
         df = pd.DataFrame(registros_actuales)
         st.dataframe(df, use_container_width=True, hide_index=True)
 
-elif st.session_state.pestana_espacios == "Cancelar Reserva":
-    st.markdown("<h4 style='color: #03045E; font-size: 1.15rem; margin-bottom: 10px;'>Anulación de Turnos</h4>", unsafe_allow_html=True)
+# 3. CANCELAR RESERVA
+elif opcion_seleccionada == "❌ Cancelar Reserva":
+    st.markdown("<h4 style='color: #03045E; font-size: 1.1rem; margin-bottom: 10px;'>Anulación de Turnos</h4>", unsafe_allow_html=True)
     if not registros_actuales:
         st.info("No hay turnos para cancelar.")
     else:
         opciones = {
-            r["id"]: f"{r['fecha']} | {r['espacio']} | {r['turno']} (Prof. {r['profesor']})"
+            r["id"]: f"{r['fecha']} | {r['espacio']} | {r['turno']} ({r['profesor']})"
             for r in registros_actuales
         }
-        reserva_id = st.selectbox("Seleccionar turno a dar de baja:", options=list(opciones.keys()), format_func=lambda x: opciones[x])
-        clave = st.text_input("Clave Institucional de Confirmación:", type="password", key="pwd_esp")
+        reserva_id = st.selectbox("Seleccionar turno:", options=list(opciones.keys()), format_func=lambda x: opciones[x])
+        clave = st.text_input("Clave Institucional:", type="password", key="pwd_esp")
         if st.button("Eliminar Reserva", type="primary", use_container_width=True, key="btn_del_esp"):
             if clave == CLAVE_CANCELACION:
                 if eliminar_registro(reserva_id):
                     st.cache_data.clear()
-                    st.toast("🗑️ Cancelación realizada correctamente.", icon="⚠️")
-                    st.success("✅ Cancelación exitosa: La reserva ha sido eliminada de la base de datos.")
+                    st.toast("🗑️ Cancelación realizada.", icon="⚠️")
+                    st.success("✅ Reserva eliminada correctamente.")
             else:
                 st.error("🔒 Clave incorrecta.")
