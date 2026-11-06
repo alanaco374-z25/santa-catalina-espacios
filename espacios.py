@@ -178,6 +178,10 @@ st.markdown(
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
     }
+    /* Ocultar cualquier texto huérfano de iconos del sistema */
+    [data-testid="stSidebarNav"] span {
+        font-family: 'Segoe UI', sans-serif !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
