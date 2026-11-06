@@ -90,6 +90,8 @@ def enviar_correo_confirmacion(destinatario, reserva):
         return False
 
 
+
+@st.cache_data(ttl=60)  
 def cargar_datos():
     consulta = """
         SELECT id, profesor, email,
@@ -271,8 +273,8 @@ if st.session_state.pestana_espacios == "Nueva Reserva":
             else:
                 enviar_correo_confirmacion(email_profesor.strip().lower(), guardado)
                 
-                # --- ANIMACIÓN Y NOTIFICACIÓN DE RESERVA EXITOSA ---
-                st.balloons()  # Lanzar animación de globos
+                
+                st.balloons()  #
                 st.toast("🎉 ¡Reserva confirmada con éxito!", icon="✅")
                 st.success("🎉 ¡Reserva registrada y correo enviado con éxito!")
     
@@ -299,7 +301,7 @@ elif st.session_state.pestana_espacios == "Cancelar Reserva":
         if st.button("Eliminar Reserva", type="primary", use_container_width=True, key="btn_del_esp"):
             if clave == CLAVE_CANCELACION:
                 if eliminar_registro(reserva_id):
-                    # --- ANIMACIÓN Y NOTIFICACIÓN DE CANCELACIÓN EXITOSA ---
+                  
                     st.toast("🗑️ Cancelación realizada correctamente.", icon="⚠️")
                     st.success("✅ Cancelación exitosa: La reserva ha sido eliminada de la base de datos.")
                     st.rerun()
