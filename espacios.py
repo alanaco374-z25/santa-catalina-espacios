@@ -90,8 +90,7 @@ def enviar_correo_confirmacion(destinatario, reserva):
         return False
 
 
-
-@st.cache_data(ttl=60)  
+@st.cache_data(ttl=60)
 def cargar_datos():
     consulta = """
         SELECT id, profesor, email,
@@ -175,7 +174,6 @@ st.markdown(
     button[aria-label="Show password"], button[aria-label="Hide password"] {
         display: none !important;
     }
-    /* Forzar mejor calidad y suavizado en las imágenes */
     img {
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
@@ -185,7 +183,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Encabezado principal con 3 columnas: Nuevo logo (izq), Título (centro), Logo anterior (der)
+# Encabezado principal con logos
 col_img1, col_texto, col_img2 = st.columns([1, 2.7, 1])
 
 with col_img1:
@@ -212,6 +210,42 @@ with col_img2:
 
 st.markdown("<hr style='border: 0; border-top: 2px solid #CBD5E1; margin-top: 15px; margin-bottom: 20px;'>", unsafe_allow_html=True)
 
+# --- CONTROL DE ACCESO / PANTALLA DE LOGIN INSTITUCIONAL ---
+if "autenticado" not in st.session_state:
+    st.session_state.autenticado = False
+
+if not st.session_state.autenticado:
+    st.markdown("<br>", unsafe_allow_html=True)
+    col_l1, col_l2, col_l3 = st.columns([1, 2.2, 1])
+    with col_l2:
+        with st.container(border=True):
+            st.markdown(
+                """
+                <div style='text-align: center; margin-bottom: 15px;'>
+                    <h4 style='color: #03045E; font-size: 1.2rem; font-weight: 700; margin-bottom: 5px;'>🔒 Acceso Restringido</h4>
+                    <p style='color: #64748B; font-size: 0.85rem;'>Ingrese la clave institucional para operar el sistema de reservas.</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            pass_input = st.text_input("Clave de Acceso:", type="password", key="login_pass", label_visibility="collapsed")
+            st.markdown("<div style='height: 5px;'></div>", unsafe_allow_html=True)
+            if st.button("Ingresar al Sistema", type="primary", use_container_width=True, key="btn_login"):
+                if pass_input == CLAVE_CANCELACION:
+                    st.session_state.autenticado = True
+                    st.rerun()
+                else:
+                    st.error("❌ Clave institucional incorrecta.")
+    st.stop()
+
+# --- BOTÓN DE CERRAR SESIÓN (Sidebar) ---
+with st.sidebar:
+    st.markdown("### Sesión Activa")
+    if st.button("🔒 Cerrar Sesión", use_container_width=True):
+        st.session_state.autenticado = False
+        st.rerun()
+
+# --- CARGA DE DATOS ---
 try:
     registros_actuales = cargar_datos()
 except Exception as error:
@@ -272,12 +306,10 @@ if st.session_state.pestana_espacios == "Nueva Reserva":
                 st.error("❌ Conflicto: El espacio seleccionado ya está ocupado en ese horario.")
             else:
                 enviar_correo_confirmacion(email_profesor.strip().lower(), guardado)
-                
-                
-                st.balloons()  #
+                st.cache_data.clear()
+                st.balloons()
                 st.toast("🎉 ¡Reserva confirmada con éxito!", icon="✅")
                 st.success("🎉 ¡Reserva registrada y correo enviado con éxito!")
-    
 
 elif st.session_state.pestana_espacios == "Planilla de Disponibilidad":
     st.markdown("<h4 style='color: #03045E; font-size: 1.15rem; margin-bottom: 10px;'>Ocupación actual de Espacios y Aulas</h4>", unsafe_allow_html=True)
@@ -297,13 +329,12 @@ elif st.session_state.pestana_espacios == "Cancelar Reserva":
             for r in registros_actuales
         }
         reserva_id = st.selectbox("Seleccionar turno a dar de baja:", options=list(opciones.keys()), format_func=lambda x: opciones[x])
-        clave = st.text_input("Clave Institucional:", type="password", key="pwd_esp")
+        clave = st.text_input("Clave Institucional de Confirmación:", type="password", key="pwd_esp")
         if st.button("Eliminar Reserva", type="primary", use_container_width=True, key="btn_del_esp"):
             if clave == CLAVE_CANCELACION:
                 if eliminar_registro(reserva_id):
-                  
+                    st.cache_data.clear()
                     st.toast("🗑️ Cancelación realizada correctamente.", icon="⚠️")
                     st.success("✅ Cancelación exitosa: La reserva ha sido eliminada de la base de datos.")
-                    st.rerun()
             else:
                 st.error("🔒 Clave incorrecta.")
