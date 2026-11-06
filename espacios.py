@@ -275,7 +275,7 @@ if st.session_state.pestana_espacios == "Nueva Reserva":
                 st.balloons()  # Lanzar animación de globos
                 st.toast("🎉 ¡Reserva confirmada con éxito!", icon="✅")
                 st.success("🎉 ¡Reserva registrada y correo enviado con éxito!")
-                st.rerun()
+    
 
 elif st.session_state.pestana_espacios == "Planilla de Disponibilidad":
     st.markdown("<h4 style='color: #03045E; font-size: 1.15rem; margin-bottom: 10px;'>Ocupación actual de Espacios y Aulas</h4>", unsafe_allow_html=True)
